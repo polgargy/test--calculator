@@ -40,6 +40,9 @@ return [
     */
 
     'debug' => (bool) env('APP_DEBUG', false),
+    'debug_every_db_query' => (bool) env('APP_DEBUG_EVERY_DB_QUERY', false),
+
+    /*
 
     /*
     |--------------------------------------------------------------------------
@@ -65,7 +68,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Europe/Budapest',
 
     /*
     |--------------------------------------------------------------------------

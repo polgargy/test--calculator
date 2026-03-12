@@ -1,0 +1,52 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+        - config
+        - database
+        - routes
+
+    # Level 9 is the highest level
+    level: 5
+    
+    # Check for missing typehints
+    checkMissingCallableSignature: true
+    
+    # Additional checks
+    checkUninitializedProperties: true
+    checkDynamicProperties: true
+    
+    # Don't report when ignored error patterns don't match any errors
+    reportUnmatchedIgnoredErrors: false
+
+    ignoreErrors:
+        # Ignore undefined properties on API Resource classes (they access model properties)
+        - '#Access to an undefined property [a-zA-Z0-9\\_]+Resource::\$[a-zA-Z_]+#'
+        
+        # Ignore PDO\Mysql constant issues in config
+        - '#Access to constant ATTR_SSL_CA on an unknown class Pdo\\Mysql#'
+        
+        # Ignore fillable array type mismatch (Laravel convention)
+        - '#PHPDoc type array<string> of property .+::\$fillable is not covariant#'
+        
+        # Ignore Auth::refresh() method (JWT auth custom method)
+        - '#Call to an undefined static method .+\\Auth::refresh\(\)#'
+        
+        # Ignore login() void return type usage (Laravel auth pattern)
+        - '#Result of method .+::login\(\) \(void\) is used#'
+        
+        # Ignore Eloquent Model property access (dynamic properties)
+        - '#Access to an undefined property Illuminate\\Database\\Eloquent\\Model::\$[a-zA-Z_]+#'
+        
+        # Ignore migration ForeignKeyDefinition methods
+        - '#Call to an undefined method Illuminate\\Database\\Schema\\ForeignKeyDefinition::onDelete#'
+
+        # Ignore unused traits (utility traits not yet used but ready for future use)
+        - '#Trait .+ is used zero times and is not analysed#'
+        
+    excludePaths:
+        - bootstrap/cache/*
+        - storage/*
+        - vendor/*

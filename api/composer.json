@@ -3,15 +3,20 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
         "laravel/framework": "^12.0",
-        "laravel/tinker": "^2.10.1"
+        "laravel/tinker": "^2.10.1",
+        "php-open-source-saver/jwt-auth": "^2.8"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "larastan/larastan": "^3.0",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",
         "laravel/sail": "^1.41",
@@ -48,6 +53,13 @@
             "@php artisan config:clear --ansi",
             "@php artisan test"
         ],
+        "lint": [
+            "@pint",
+            "@stan"
+        ],
+        "pint": "./vendor/bin/pint",
+        "pint:test": "./vendor/bin/pint --test",
+        "stan": "./vendor/bin/phpstan analyse --memory-limit=2G",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
