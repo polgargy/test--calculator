@@ -1,0 +1,64 @@
+#!/bin/bash
+
+# Git pre-commit hook for code quality checks
+# This hook runs before each commit to ensure code quality
+
+echo "🔍 Running Laravel Pint..."
+
+# Check if we're in Docker environment
+if [ -f "docker-compose.yml" ]; then
+    # Run Laravel Pint in Docker
+    docker-compose exec -T php ./vendor/bin/pint
+else
+    # Run Laravel Pint locally
+    cd api && ./vendor/bin/pint
+fi
+
+if [ $? -ne 0 ]; then
+    echo "❌ Laravel Pint found issues. Please fix them and try again."
+    exit 1
+fi
+
+echo "✅ Laravel Pint passed!"
+
+echo ""
+echo "🔍 Running Larastan (PHPStan)..."
+
+# Check if we're in Docker environment
+if [ -f "docker-compose.yml" ]; then
+    # Run Larastan in Docker
+    docker-compose exec -T php ./vendor/bin/phpstan analyse --memory-limit=2G
+else
+    # Run Larastan locally
+    cd api && ./vendor/bin/phpstan analyse --memory-limit=2G
+fi
+
+if [ $? -ne 0 ]; then
+    echo "❌ Larastan found issues. Please fix them and try again."
+    exit 1
+fi
+
+echo "✅ Larastan passed!"
+
+echo ""
+echo "🔍 Running ESLint (React)..."
+
+# Check if we're in Docker environment
+if [ -f "docker-compose.yml" ]; then
+    # Run ESLint in Docker
+    docker-compose exec -T client npm run lint
+else
+    # Run ESLint locally
+    cd client && npm run lint
+fi
+
+if [ $? -ne 0 ]; then
+    echo "❌ ESLint found issues. Please fix them and try again."
+    exit 1
+fi
+
+echo "✅ ESLint passed!"
+echo ""
+echo "✨ All checks passed! Proceeding with commit..."
+
+exit 0
